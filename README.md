@@ -11,6 +11,15 @@ Obter skill em IaC e fazer o deploy de uma aplicação na AWS usando EC2.
 3. [Conta na AWS](https://aws.amazon.com/)
 4. [Nodejs](https://nodejs.org/en/download)
 
+
+## AWS
+Na AWS iremos configurar um SSH para fazer a conexão futuramente via SSH para o Ansible
+Crie uma nova chave SSH com o comando abaixo:
+
+
+Digite uma senha para a chave ou deixe em branco. 
+
+Na AWS na parte de keypair importe a chave pública que criamos. Lembre-se que a chave terá acesso apenas a região que ela está sendo configurada!  
 ## Configurar SSH AWS
 
 
@@ -20,14 +29,12 @@ Obter skill em IaC e fazer o deploy de uma aplicação na AWS usando EC2.
     git clone git@github.com:pcalves1/terraform-ansible-aws-lab.git
 
 #### Inicie o terraform
-No terminal, navegue nas pastas para iniciar a configuração do terraform com o comando `terraform init` execute esse comando nas duas pastas abaixo
+No terminal, navegue nas pastas abaixo para iniciar a configuração do terraform com o comando `terraform init`
 
     cd terraform-ansible-aws-lab/infra/aws-base
     cd terraform-ansible-aws-lab/infra/dev
 
 Na pasta *terraform-ansible-aws-lab/infra/dev* execute o comando terraform plan
-
-To deploy our terraform code first of all we need to create account on https://app.terraform.io/session and create organization and workspace.
 
 ## Deploy da aplicação
 
