@@ -1,0 +1,27 @@
+{
+  "name": "todo-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon ./src/index.js",
+    "start-container": "node ./src/index.js",
+    "prod": "pm2 start ./src/index.js --update-env -f",
+    "pm2-ls": "pm2 list",
+    "pm2-log": "pm2 logs",
+    "pm2-del": "pm2 delete 0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "mysql2": "^3.9.7",
+    "pm2": "^5.3.1",
+    "uuid": "^9.0.1",
+    "winston": "^3.13.0"
+  }
+}

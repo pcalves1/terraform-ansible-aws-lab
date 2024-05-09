@@ -1,0 +1,12 @@
+
+- hosts: mysql_dev
+  vars_files:
+    - vars.yaml
+  roles:
+  - mysql
+
+- hosts: todo_app_dev
+  vars_files:
+    - vars.yaml
+  roles:
+  - todo_app_server

@@ -1,0 +1,41 @@
+version: "3"
+
+services:
+
+  todo-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      MYSQL_HOST: mysql-db
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: todo_items
+      MYSQL_USER: root
+    container_name: todo-app
+    restart: unless-stopped
+    command: ["npm", "run", "start-container"]
+    ports:
+      - 3000:3000
+    depends_on:
+      - mysql-db
+    networks:
+      - todo_network
+
+  mysql-db:
+    image: mysql:latest
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: todo_items
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - todo_network
+
+networks:
+  todo_network:
+volumes:
+  mysql_data:

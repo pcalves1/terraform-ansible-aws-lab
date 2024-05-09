@@ -1,0 +1,4 @@
+- name: restart mysql
+  ansible.builtin.shell:
+    cmd: systemctl restart mysql.service
+  become: true
