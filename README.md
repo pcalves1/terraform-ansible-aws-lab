@@ -6,22 +6,18 @@ Obter skill em IaC e fazer o deploy de uma aplicação na AWS usando EC2.
 
 
 ## Requerimentos e ferramentas
+Esse lab foi executado no linux Ubuntu. Alguns comandos/detalhes podem variar de acordo com SO usado
 1. [Terraform](https://developer.hashicorp.com/terraform/install)
 2. [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/index.html)
-3. [Conta na AWS](https://aws.amazon.com/)
-4. [Nodejs](https://nodejs.org/en/download)
+3. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
 
-## AWS
-Na AWS iremos configurar um SSH para fazer a conexão futuramente via SSH para o Ansible
-Crie uma nova chave SSH com o comando abaixo:
+## Criar chave SSH para acessar as instâncas EC2
+Primeiramente precisamos preparar as configurações necessárias para executar o ambiente. Além de ter as ferramentas acima, deveremos criar uma chave SSH que será utilizada para acessar as máquinas EC2 e para gerenciá-las com o Ansible. No exemplo abaixo criaremos uma chamada *aws-iac-lab* que está sendo salva na pasta *~/.ssh*
 
+    ssh-keygen -f ~/.ssh/aws-iac-lab -t rsa
 
 Digite uma senha para a chave ou deixe em branco. 
-
-Na AWS na parte de keypair importe a chave pública que criamos. Lembre-se que a chave terá acesso apenas a região que ela está sendo configurada!  
-## Configurar SSH AWS
-
 
 ## Deploy da infraestrutura
 #### Clonar repositório
@@ -29,15 +25,23 @@ Na AWS na parte de keypair importe a chave pública que criamos. Lembre-se que a
     git clone git@github.com:pcalves1/terraform-ansible-aws-lab.git
 
 #### Inicie o terraform
-No terminal, navegue nas pastas abaixo para iniciar a configuração do terraform com o comando `terraform init`
+No terminal, navegue na pasta `terraform-ansible-aws-lab/infra/aws-base` e execute o comando `terraform init`
 
-    cd terraform-ansible-aws-lab/infra/aws-base
-    cd terraform-ansible-aws-lab/infra/dev
+Repita o mesmo passo na pasta `terraform-ansible-aws-lab/infra/dev` onde contém o módulo onde estão os inputs de inicialização da infra
+    
+Na pasta *terraform-ansible-aws-lab/infra/dev* execute o comando `terraform plan` para se certificar do que será implementado. E depois o comando `terraform apply`
 
-Na pasta *terraform-ansible-aws-lab/infra/dev* execute o comando terraform plan
+#### Login AWS CLI
+No console da AWS vá em **IAM**, crie um usuário novo e em seguida uma **Acess key** para este user na AWS liberando acesso ao **CLI**... Salve as credenciais, pois iremos utilizar em seguida. No terminal execute o comando abaixo e coloque as informações da access key.
+
+    aws configure
 
 ## Deploy da aplicação
+No terminal, navegue na pasta `terraform-ansible-aws-lab/infra/dev/ansible` para iniciar o playbook conforme o aquivo host
+
+    ansible-playbook playbook.yaml -i hosts
 
 
 ## Remover Infrastrutura
+Navegue na pasta `terraform-ansible-aws-lab/infra/dev` e execute o comando `terraform destroy` para desprovisionar a infra na AWS e não gerar custos além do necessário.
 

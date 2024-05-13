@@ -1,5 +1,5 @@
 module "aws-dev-app" {
-  source              = "../../aws-base"
+  source              = "../aws-base"
   ami                 = "ami-04b70fa74e45c3917"
   instance            = "t2.micro"
   aws_region          = "us-east-1"
