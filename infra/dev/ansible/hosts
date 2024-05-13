@@ -1,5 +1,5 @@
 [todo_app_dev]
-<<APP_IP>> ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/aws-general
+<<APP_IP>> ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/aws-iac-lab
 
 [mysql_dev]
-<<MYSQL_IP>> ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/aws-general
+<<MYSQL_IP>> ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/aws-iac-lab
