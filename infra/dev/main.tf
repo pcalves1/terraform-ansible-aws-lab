@@ -7,7 +7,7 @@ module "aws-dev-app" {
   security_group_name = "dev-general-access"
   availability_zone   = "us-east-1a"
   associate_public_ip = "true"
-  ssh_key             = "aws-general"
+  ssh_key             = "aws-iac-lab"
 }
 
 output "IP" {

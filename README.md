@@ -4,7 +4,6 @@ O propósito desse laboratório é por em prática os conhecimentos de Ansible, 
 ## Objetivo principal
 Obter skill em IaC e fazer o deploy de uma aplicação na AWS usando EC2.
 
-
 ## Requerimentos e ferramentas
 Esse lab foi executado no linux Ubuntu. Alguns comandos/detalhes podem variar de acordo com SO usado
 1. [Terraform](https://developer.hashicorp.com/terraform/install)
@@ -19,6 +18,13 @@ Primeiramente precisamos preparar as configurações necessárias para executar 
 
 Digite uma senha para a chave ou deixe em branco. 
 
+
+
+## Login AWS CLI
+No console da AWS vá em **IAM**, crie um usuário novo e em seguida uma **Acess key** para este user na AWS liberando acesso ao **CLI**... Salve as credenciais, pois iremos utilizar em seguida. No terminal execute o comando abaixo e coloque as informações da access key.
+
+    aws configure
+
 ## Deploy da infraestrutura
 #### Clonar repositório
 
@@ -27,21 +33,36 @@ Digite uma senha para a chave ou deixe em branco.
 #### Inicie o terraform
 No terminal, navegue na pasta `terraform-ansible-aws-lab/infra/aws-base` e execute o comando `terraform init`
 
-Repita o mesmo passo na pasta `terraform-ansible-aws-lab/infra/dev` onde contém o módulo onde estão os inputs de inicialização da infra
+Repita o mesmo passo na pasta `terraform-ansible-aws-lab/infra/dev` onde contém o módulo onde estão os inputs de inicialização da infra e dê o comando `terraform init`
     
-Na pasta *terraform-ansible-aws-lab/infra/dev* execute o comando `terraform plan` para se certificar do que será implementado. E depois o comando `terraform apply`
-
-#### Login AWS CLI
-No console da AWS vá em **IAM**, crie um usuário novo e em seguida uma **Acess key** para este user na AWS liberando acesso ao **CLI**... Salve as credenciais, pois iremos utilizar em seguida. No terminal execute o comando abaixo e coloque as informações da access key.
-
-    aws configure
+Na pasta `terraform-ansible-aws-lab/infra/dev` execute o comando `terraform plan` para se certificar do que será implementado. E depois o comando `terraform apply`
 
 ## Deploy da aplicação
-No terminal, navegue na pasta `terraform-ansible-aws-lab/infra/dev/ansible` para iniciar o playbook conforme o aquivo host
+
+
+#### Arquivo hosts Ansible
+No terminal ainda na pasta `terraform-ansible-aws-lab/infra/dev` execute o comando abaixo para pegar o IP de cada instância e preencher automaticamente o arquivo hosts do ansible, onde está mapeado os managed hosts. 
+
+    sed -i "s/<<MYSQL_IP>>/$(terraform output IP | grep dev-mysql | awk -F'= ' '{print $2}' | sed 's/"//g')/g" ./ansible/hosts
+
+    sed -i "s/<<APP_IP>>/$(terraform output IP | grep dev-app | awk -F'= ' '{print $2}' | sed 's/"//g')/g" ./ansible/hosts
+
+#### Vars
+Faremos a mesma coisa para o arquivo de variáveis. Iremos colocar o IP de cada instância em seu devido lugar com o comando abaixo
+
+    sed -i "s/<<MYSQL_IP>>/$(terraform output IP | grep dev-mysql | awk -F'= ' '{print $2}' | sed 's/"//g')/g" ./ansible/vars/vars.yaml
+
+    sed -i "s/<<APP_IP>>/$(terraform output IP | grep dev-app | awk -F'= ' '{print $2}' | sed 's/"//g')/g" ./ansible/vars/vars.yaml
+
+#### Usuário e senha banco de dados
+Altere o arquivo `terraform-ansible-aws-lab/infra/dev/ansible/vars/vars.yaml` inserindo um usuário e senha para o banco de dados MYSQL. No arquivo substitua a mysql_user: *"<<MYSQL_USER>>"* por *"joao"* por exemplo.
+
+Agora navegue na pasta `terraform-ansible-aws-lab/infra/dev/ansible` para iniciar o playbook conforme o aquivo host
 
     ansible-playbook playbook.yaml -i hosts
 
 
-## Remover Infrastrutura
+
+## Remover Infraestrutura
 Navegue na pasta `terraform-ansible-aws-lab/infra/dev` e execute o comando `terraform destroy` para desprovisionar a infra na AWS e não gerar custos além do necessário.
 

@@ -1,4 +1,4 @@
-todo_app_ip: "<<APP_IP>>"
-dev_mysql_ip: "<<MYSQL_IP>>"
+todo_app_ip: <<APP_IP>>
+dev_mysql_ip: <<MYSQL_IP>>
 mysql_user: "<<MYSQL_USER>>"
 mysql_password: "<<MYSQL_PASSWORD>>"
