@@ -12,15 +12,13 @@ Esse lab foi executado no linux Ubuntu. Alguns comandos/detalhes podem variar de
 
 ## Arquitetura do lab
 - Provisionamento via terraform de duas EC2 com Ubuntu.
-
 - Uma EC2 com Ubuntu que será usada para deixar o todo-list rodando em nodejs.
-
 - Uma EC2 com Ubuntu que será o banco de dados MYSQL
-Ambas as máquinas serão gerenciadas pelo Ansible
+- Ambas as máquinas serão gerenciadas pelo Ansible
 
 
 ## Criar chave SSH para acessar as instâncas EC2
-Primeiramente precisamos preparar as configurações necessárias para executar o ambiente. Além de ter as ferramentas acima, deveremos criar uma chave SSH que será utilizada para acessar as máquinas EC2 e para gerenciá-las com o Ansible. No exemplo abaixo criaremos uma chamada *aws-iac-lab* que está sendo salva na pasta *~/.ssh*
+Primeiramente precisamos preparar as configurações necessárias para executar o ambiente. Além de ter as ferramentas acima, deveremos criar uma chave SSH que será utilizada para acessar as máquinas EC2 e para gerenciá-las com o Ansible. No exemplo abaixo criaremos uma chamada `aws-iac-lab` que está sendo salva na pasta `~/.ssh`
 
     ssh-keygen -f ~/.ssh/aws-iac-lab -t rsa
 
@@ -29,7 +27,7 @@ Digite uma senha para a chave ou deixe em branco.
 
 
 ## Login AWS CLI
-No console da AWS vá em **IAM**, crie um usuário novo e em seguida uma **Acess key** para este user na AWS liberando acesso ao **CLI**... Salve as credenciais, pois iremos utilizar em seguida. No terminal execute o comando abaixo e coloque as informações da access key.
+No console da AWS vá em `IAM`, crie um usuário novo, dê permissão administrativa para ele e em seguida uma `Acess key` liberando acesso ao `CLI`... Salve as credenciais, pois iremos utilizar em seguida. No terminal execute o comando abaixo e coloque as informações da access key.
 
     aws configure
 
@@ -77,7 +75,7 @@ Agora navegue na pasta `terraform-ansible-aws-lab/infra/dev/ansible` para inicia
 
 
 ## Acessando a aplicação
-Depois do playbook ansible rodar e estiver tudo ok. Vá no seu browser e acesse a aplicação através do IP da instância `dev-app` na porta `3000` 
+Depois do playbook ansible rodar e estiver tudo ok. Vá no seu browser e acesse a aplicação através do IP da instância `dev-app` na porta `3000` <br>
 *Exemplo: 123.123.123.123:3000*
 
 ## Remover Infraestrutura
