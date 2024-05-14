@@ -21,16 +21,9 @@ resource "aws_instance" "todo_app_instance" {
   subnet_id                   = aws_subnet.eks_subnet.id
   associate_public_ip_address = var.associate_public_ip
   key_name                    = var.ssh_key
-  user_data = <<-EOF
-            #!/bin/bash
-            echo 'export MYSQL_HOST="dev-mysql"' >> /etc/profile;
-            echo 'export MYSQL_ROOT_PASSWORD="qwe@123"' >> /etc/profile;
-            echo 'export MYSQL_DATABASE="todo_items"' >> /etc/profile;
-            echo 'export MYSQL_USER="pcalves"' >> /etc/profile;
-            EOF
 
   tags = {
-    Name : var.instance_names_dev[count.index]
+    Name = var.instance_names_dev[count.index]
     lab = "eks"
   }
   depends_on = [aws_internet_gateway.eks_lab_gw]
