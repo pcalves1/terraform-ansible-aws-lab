@@ -10,6 +10,14 @@ Esse lab foi executado no linux Ubuntu. Alguns comandos/detalhes podem variar de
 2. [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/index.html)
 3. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
+## Arquitetura do lab
+- Provisionamento via terraform de duas EC2 com Ubuntu.
+
+- Uma EC2 com Ubuntu que será usada para deixar o todo-list rodando em nodejs.
+
+- Uma EC2 com Ubuntu que será o banco de dados MYSQL
+Ambas as máquinas serão gerenciadas pelo Ansible
+
 
 ## Criar chave SSH para acessar as instâncas EC2
 Primeiramente precisamos preparar as configurações necessárias para executar o ambiente. Além de ter as ferramentas acima, deveremos criar uma chave SSH que será utilizada para acessar as máquinas EC2 e para gerenciá-las com o Ansible. No exemplo abaixo criaremos uma chamada *aws-iac-lab* que está sendo salva na pasta *~/.ssh*
@@ -41,27 +49,36 @@ Na pasta `terraform-ansible-aws-lab/infra/dev` execute o comando `terraform plan
 
 
 #### Arquivo hosts Ansible
-No terminal ainda na pasta `terraform-ansible-aws-lab/infra/dev` execute o comando abaixo para pegar o IP de cada instância e preencher automaticamente o arquivo hosts do ansible, onde está mapeado os managed hosts. 
+Adicione o IP de cada instância EC2 no arquivo `terraform-ansible-aws-lab/infra/dev/hosts`.
+````
+Antes: <<APP_IP>> ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/aws-iac-lab
 
-    sed -i "s/<<MYSQL_IP>>/$(terraform output IP | grep dev-mysql | awk -F'= ' '{print $2}' | sed 's/"//g')/g" ./ansible/hosts
-
-    sed -i "s/<<APP_IP>>/$(terraform output IP | grep dev-app | awk -F'= ' '{print $2}' | sed 's/"//g')/g" ./ansible/hosts
+Depois: 123.123.123.123 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/aws-iac-lab
+````
 
 #### Vars
-Faremos a mesma coisa para o arquivo de variáveis. Iremos colocar o IP de cada instância em seu devido lugar com o comando abaixo
+Faremos a mesma coisa para o arquivo de variáveis `terraform-ansible-aws-lab/infra/dev/ansible/vars/vars.yaml`. Iremos adicionar o IP de cada instância em seu devido lugar
 
-    sed -i "s/<<MYSQL_IP>>/$(terraform output IP | grep dev-mysql | awk -F'= ' '{print $2}' | sed 's/"//g')/g" ./ansible/vars/vars.yaml
-
-    sed -i "s/<<APP_IP>>/$(terraform output IP | grep dev-app | awk -F'= ' '{print $2}' | sed 's/"//g')/g" ./ansible/vars/vars.yaml
+````
+Antes: todo_app_ip: "<<APP_IP>>"
+Depois: todo_app_ip: "123.123.123.123"
+````
 
 #### Usuário e senha banco de dados
-Altere o arquivo `terraform-ansible-aws-lab/infra/dev/ansible/vars/vars.yaml` inserindo um usuário e senha para o banco de dados MYSQL. No arquivo substitua a mysql_user: *"<<MYSQL_USER>>"* por *"joao"* por exemplo.
+Ainda no arquivo `terraform-ansible-aws-lab/infra/dev/ansible/vars/vars.yaml` insira o nome de um usuário e senha para o banco de dados MYSQL. No arquivo substitua as linhas do usuário e senha como no exemplo a seguir:
+
+mysql_user: "~~<<MYSQL_USER>>~~" <br>
+mysql_user: "meu_user"
+
 
 Agora navegue na pasta `terraform-ansible-aws-lab/infra/dev/ansible` para iniciar o playbook conforme o aquivo host
 
     ansible-playbook playbook.yaml -i hosts
 
 
+## Acessando a aplicação
+Depois do playbook ansible rodar e estiver tudo ok. Vá no seu browser e acesse a aplicação através do IP da instância `dev-app` na porta `3000` 
+*Exemplo: 123.123.123.123:3000*
 
 ## Remover Infraestrutura
 Navegue na pasta `terraform-ansible-aws-lab/infra/dev` e execute o comando `terraform destroy` para desprovisionar a infra na AWS e não gerar custos além do necessário.
