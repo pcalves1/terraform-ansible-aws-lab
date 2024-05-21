@@ -32,40 +32,6 @@
   ansible.builtin.shell: |
     cd /home/ubuntu/todo-app; npm i
 
-# - name: Start porject
-#   ansible.builtin.shell: |
-#     cd /home/ubuntu/todo-app; ./deploy.sh
-
-# - name: Echo my_env_var
-  # vars_files:
-  #   - vars.yaml
-  # shell: "echo $MYSQL_HOST"
-  # environment:
-  #   MYSQL_HOST: "dev-mysql"
-  #   MYSQL_ROOT_PASSWORD: "qwe@123"
-  #   MYSQL_DATABASE: "todo_items"
-  #   MYSQL_USER: "pcalves"
-
-# - name: Start project
-#   ansible.builtin.shell: 
-#     cd /home/ubuntu/todo-app; npm run prod &
-#   environment:
-#     MYSQL_HOST: "dev-mysql"
-#     MYSQL_ROOT_PASSWORD: "qwe@123"
-#     MYSQL_DATABASE: "todo_items"
-#     MYSQL_USER: "pcalves"
-
 - name: Start project
   ansible.builtin.shell: 
     cmd: cd /home/ubuntu/todo-app && MYSQL_HOST="dev-mysql" MYSQL_ROOT_PASSWORD={{ mysql_password }} MYSQL_DATABASE="todo_items" MYSQL_USER={{ mysql_user }} npm run prod
-
-
-# - name: Start the application
-#   environment:
-#     MYSQL_HOST: "dev-mysql"
-#     MYSQL_ROOT_PASSWORD: "qwe@123"
-#     MYSQL_DATABASE: "todo_items"
-#     MYSQL_USER: "pcalves"
-#   command:
-#     chdir: /home/ubuntu/todo-app
-#     cmd: npm run prod

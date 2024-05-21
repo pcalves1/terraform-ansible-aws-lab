@@ -75,8 +75,7 @@ Agora navegue na pasta `terraform-ansible-aws-lab/infra/dev/ansible` para inicia
 
 
 ## Acessando a aplicação
-Depois do playbook ansible rodar e estiver tudo ok. Vá no seu browser e acesse a aplicação através do IP da instância `dev-app` na porta `3000` <br>
-*Exemplo: 123.123.123.123:3000*
+Depois do playbook ansible rodar e estiver tudo ok. No terminal navegue para a pasta `terraform-ansible-aws-lab/infra/dev` e rode o comando `terraform output`, copie o endereço do load balancer e cole no seu navegador 
 
 ## Remover Infraestrutura
 Navegue na pasta `terraform-ansible-aws-lab/infra/dev` e execute o comando `terraform destroy` para desprovisionar a infra na AWS e não gerar custos além do necessário.

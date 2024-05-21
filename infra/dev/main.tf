@@ -15,3 +15,7 @@ module "aws-dev-app" {
 output "IP" {
   value = module.aws-dev-app.aws-dev-app-ips
 }
+
+output "loadb_balancer_address" {
+  value = module.aws-dev-app.loadb_balancer_address
+}

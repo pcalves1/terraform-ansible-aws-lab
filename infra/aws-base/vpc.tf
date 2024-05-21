@@ -86,11 +86,6 @@ resource "aws_lb_target_group_attachment" "target_group_attachment" {
   target_id        = aws_instance.todo_app_instance[0].id # CRIAR FORMA DE ESPECIFICAR MELHOR A INSTÂNCIA DEV-APP (IF TAG NAME EQUAL DEV-APP??)
 }
 
-output "elb_dest" {
+output "loadb_balancer_address" {
   value = aws_lb.elb_todo_app.dns_name
 }
-
-# CONFIGURAR GRUPO DE SEGURANÇA LOADBALANCER PARA RECEBER HTTP
-# CONFIGURAR GRUPO DE SEGURANÇA APP PARA RECEBER NA PORTA 3000 TUDO DO LOADBALANCER
-# CONFIGURAR AUTOSCALING
-# CONFIGURAR EC2 LAUNCH TEMPLATE

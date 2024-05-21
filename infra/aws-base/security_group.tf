@@ -50,12 +50,3 @@ resource "aws_security_group" "elb_general_access" {
     Name = var.elb_security_group_name
   }
 }
-
-
-# target group: 
-# protocol version
-# port
-# name
-# type target
-
-# registrar máquina no target group
