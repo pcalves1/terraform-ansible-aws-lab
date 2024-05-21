@@ -17,16 +17,15 @@ resource "aws_instance" "todo_app_instance" {
   ami                         = var.ami
   count                       = length(var.instance_names_dev)
   instance_type               = var.instance
-  security_groups             = [aws_security_group.eks_general_access.id]
-  subnet_id                   = aws_subnet.eks_subnet.id
+  security_groups             = [aws_security_group.app_general_access.id]
+  subnet_id                   = aws_subnet.lab_subnet_a.id
   associate_public_ip_address = var.associate_public_ip
   key_name                    = var.ssh_key
 
   tags = {
     Name = var.instance_names_dev[count.index]
-    lab = "eks"
   }
-  depends_on = [aws_internet_gateway.eks_lab_gw]
+  depends_on = [aws_internet_gateway.terraform_ansible_lab_gw]
 }
 
 resource "aws_key_pair" "ssh_key" {
