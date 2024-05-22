@@ -11,10 +11,11 @@ Esse lab foi executado no linux Ubuntu. Alguns comandos/detalhes podem variar de
 3. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
 ## Arquitetura do lab
-- Provisionamento via terraform de duas EC2 com Ubuntu.
-- Uma EC2 com Ubuntu que será usada para deixar o todo-list rodando em nodejs.
+- Provisionamento via terraform de duas EC2 com Ubuntu
+- Uma EC2 com Ubuntu que será usada para deixar o todo-list rodando em nodejs
 - Uma EC2 com Ubuntu que será o banco de dados MYSQL
 - Ambas as máquinas serão gerenciadas pelo Ansible
+- Loadbalancer que recebe requisições e redireciona para a instância da aplicação
 
 
 ## Criar chave SSH para acessar as instâncas EC2
@@ -27,7 +28,7 @@ Digite uma senha para a chave ou deixe em branco.
 
 
 ## Login AWS CLI
-No console da AWS vá em `IAM`, crie um usuário novo, dê permissão administrativa para ele e em seguida uma `Acess key` liberando acesso ao `CLI`... Salve as credenciais, pois iremos utilizar em seguida. No terminal execute o comando abaixo e coloque as informações da access key.
+No console da AWS vá em `IAM`, crie um usuário novo, dê permissão administrativa para ele e em seguida uma `Acess key` liberando acesso ao `CLI`... Salve as credenciais, pois iremos utilizar em seguida. No terminal execute o comando abaixo e coloque as informações da access key
 
     aws configure
 
@@ -78,5 +79,5 @@ Agora navegue na pasta `terraform-ansible-aws-lab/infra/dev/ansible` para inicia
 Depois do playbook ansible rodar e estiver tudo ok. No terminal navegue para a pasta `terraform-ansible-aws-lab/infra/dev` e rode o comando `terraform output`, copie o endereço do load balancer e cole no seu navegador 
 
 ## Remover Infraestrutura
-Navegue na pasta `terraform-ansible-aws-lab/infra/dev` e execute o comando `terraform destroy` para desprovisionar a infra na AWS e não gerar custos além do necessário.
+Navegue na pasta `terraform-ansible-aws-lab/infra/dev` e execute o comando `terraform destroy` para desprovisionar a infra na AWS e não gerar custos além do necessário
 
