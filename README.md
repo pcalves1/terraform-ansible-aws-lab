@@ -1,12 +1,12 @@
 ## Project overview
-The purpose of this lab is practice the knowledge of Ansible, Terraform, and AWS and understand how these tools relate.
+The purpose of this lab is practice the knowledge of Ansible, Terraform and AWS and understand how these tools relate
 
 ## Main goal
-To get skills in Infrastructure as Code (IaC) and deploy an application on AWS using EC2.
+To get skills in Infrastructure as Code (IaC) and deploy an application on AWS using EC2
 
 ## Requirements and Tools
 
-We'll use Ubuntu Linux for this lab. Some commands/details may vary depending on the operating system used.
+We'll use Ubuntu Linux for this lab. Some commands/details may vary depending on the operating system used
 
 1. [Terraform](https://developer.hashicorp.com/terraform/install)
 2. [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/index.html)
@@ -14,23 +14,23 @@ We'll use Ubuntu Linux for this lab. Some commands/details may vary depending on
 
 ## Lab Architecture
 - An Ubuntu EC2 instance that will be used to run the todo-app on Node.js
-- An Ubuntu EC2 instance that will be MYSQL database
+- An Ubuntu EC2 instance that will be MySQL database
 - Both machines will be managed by Ansible
 - Load balancer that receives requests and redirects them to the application instance
 
 
 ## Create SSH key to access EC2 instances
-First, we need to prepare the necessary configurations to run the environment. In addition to having the above tools previously installed, we should create an SSH key that will be used to access the EC2 instances and manage them via Ansible. The example below, we'll create one called `aws-iac-lab` which is being saved in the `~/.ssh` folder.
+First, we need to prepare the necessary configurations to run the environment. In addition to having the above tools previously installed, we should create an SSH key that will be used to access the EC2 instances and manage them via Ansible. The example below, we'll create one called `aws-iac-lab` which is being saved in the `~/.ssh` folder
 
  
 
     ssh-keygen -f ~/.ssh/aws-iac-lab -t rsa
 
-Enter a password for the key or leave it blank.
+Enter a password for the key or leave it blank
 
 
 ## AWS CLI Login
-In the AWS console, go to `IAM`, create a new user, give it administrative permission, and then an `Access key` allowing access to the `CLI`... Save the credentials, as we will use them shortly. In the terminal, execute the following command and enter the access key information.
+In the AWS console, go to `IAM`, create a new user, give it administrative permission, and then create an `Access key` allowing access to the `CLI`... Save that credentials, as we will use them shortly. In the terminal, execute the following command and enter the access key information
 
     aws configure
 
@@ -66,7 +66,7 @@ After: todo_app_ip: "123.123.123.123"
 ````
 
 #### Database user and password
-Still in the `terraform-ansible-aws-lab/infra/dev/ansible/vars/vars.yaml` file, insert a username and password for the MYSQL database. Replace the lines of the username and password as shown in the following example:
+Still in the `terraform-ansible-aws-lab/infra/dev/ansible/vars/vars.yaml` file, insert a username and password for the MySQL database. Replace the lines of the username and password as shown in the following example:
 
 mysql_user: "~~<<MYSQL_USER>>~~" <br>
 mysql_user: "meu_user"
@@ -78,7 +78,7 @@ Now go to the path `terraform-ansible-aws-lab/infra/dev/ansible` to start the pl
 
 
 ## Accessing the application
-After the ansible playbook runs and everything is okay. In the terminal, go to the path `terraform-ansible-aws-lab/infra/dev` and run the command `terraform output`, copy the load balancer address, and paste it into your browser to access the app
+After the ansible playbook runs and everything is okay. In the terminal, go to the path `terraform-ansible-aws-lab/infra/dev` and run the command `terraform output`, copy the load balancer address and paste it into your browser to access the app
 
 ## Removing Infrastructure
 Navigate to the `terraform-ansible-aws-lab/infra/dev` folder and execute the command `terraform destroy` to deprovision the infrastructure on AWS and avoid unnecessary costs
