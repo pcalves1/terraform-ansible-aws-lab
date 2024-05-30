@@ -1,6 +1,9 @@
-const db = require('../persistence/mysql');
-
-module.exports = async (req, res) => {
-    const items = await db.getItems();
-    res.send(items);
+module.exports = async (pool, req, res) => {
+    try {
+        const [items] = await pool.promise().query('SELECT * FROM items');
+        res.send(items);
+    } catch (error) {
+        console.error(`Error fetching items: ${error.message}`);
+        res.status(500).send('Error fetching items');
+    }
 };

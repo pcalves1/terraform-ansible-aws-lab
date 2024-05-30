@@ -10,19 +10,6 @@ variable "instance" {
   type = string
 }
 
-variable "app_security_group_name" {
-  type = string
-}
-
-variable "elb_security_group_name" {
-  type = string
-}
-
-
-variable "vpc_name" {
-  type = string
-}
-
 variable "associate_public_ip" {
   type = string
 }
@@ -48,11 +35,6 @@ variable "subnet_tags" {
   }
 }
 
-variable "instance_names_dev" {
-  type    = list(string)
-  default = ["dev-app", "dev-mysql"]
-}
-
 variable "availability_zone_a" {
   type = string
 }
@@ -62,12 +44,19 @@ variable "availability_zone_b" {
 }
 
 variable "subnet_cidr_block_a" {
-  default = "10.0.0.0/25"
+  default = "10.0.1.0/24"
 }
 
 variable "subnet_cidr_block_b" {
-  default = "10.0.128.0/25"
+  default = "10.0.2.0/24"
 }
 
+variable "mysql_user" {
+  type      = string
+  sensitive = true
+}
 
-# tenho que ter duas subnets com duas AZ diferentes para criar o ELB
+variable "mysql_password" {
+  type      = string
+  sensitive = true
+}
