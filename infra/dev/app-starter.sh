@@ -34,7 +34,7 @@ tee -a playbook.yml > /dev/null <<EOT
 
   - name: Start project
     ansible.builtin.shell: 
-      cmd: cd /home/ubuntu/todo-app && MYSQL_HOST=${mysql_addr} MYSQL_PASSWORD=${mysql_password} MYSQL_DATABASE="todo_items" MYSQL_USER=${mysql_user} node src/index;js
+      cmd: cd /home/ubuntu/todo-app && MYSQL_HOST=${mysql_addr} MYSQL_PASSWORD=${mysql_password} MYSQL_DATABASE="todo_items" MYSQL_USER=${mysql_user} node src/index.js
 
 
 EOT
