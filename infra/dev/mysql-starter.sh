@@ -3,10 +3,20 @@ cd /home/ubuntu
 sudo apt update
 sudo apt install -y python3 python3-pip
 sudo apt install -y ansible
+
+sudo apt install -y unzip
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+mysql_creds=$(aws secretsmanager get-secret-value --secret-id ${mysql_credentials} --region ${aws_region} | jq -r '.SecretString')
+mysql_user=$(echo $mysql_creds | jq -r '.username')
+mysql_password=$(echo $mysql_creds | jq -r '.password')
+
 sudo echo "TODO_APP_IP='${todo_app_ip}'" >> /etc/environment
-sudo echo "MYSQL_PASSWORD='${mysql_password}'" >> /etc/environment
+sudo echo "MYSQL_PASSWORD=$(echo $mysql_creds | jq -r '.password')" >> /etc/environment
 sudo echo "MYSQL_DATABASE='todo_items'" >> /etc/environment
-sudo echo "MYSQL_USER='${mysql_user}'" >> /etc/environment
+sudo echo "MYSQL_USER=$(echo $mysql_creds | jq -r '.username')" >> /etc/environment
 tee -a playbook.yml > /dev/null <<EOT
 
 - hosts: localhost
@@ -60,5 +70,5 @@ tee -a playbook.yml > /dev/null <<EOT
       notify:
         - restart mysql
 EOT
-TODO_APP_IP=${todo_app_ip} MYSQL_PASSWORD=${mysql_password} MYSQL_DATABASE=todo_items MYSQL_USER=${mysql_user} ansible-playbook playbook.yml -vvv >> /home/ubuntu/mysql-starter.log
+TODO_APP_IP=${todo_app_ip} MYSQL_PASSWORD=$(echo $mysql_creds | jq -r '.password') MYSQL_DATABASE=todo_items MYSQL_USER=$(echo $mysql_creds | jq -r '.username') ansible-playbook playbook.yml -vvv >> /home/ubuntu/mysql-starter.log
 # sudo rm -fr /home/ubuntu/playbook.yml

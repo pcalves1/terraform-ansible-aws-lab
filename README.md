@@ -63,7 +63,7 @@ Go to the path `terraform-ansible-aws-lab/infra/dev`, execute the command `terra
 
 
 ## Accessing the application
-When command `terraform apply` is finished, both machines in background will run ansible playbook to configure application and database... It will take a considerable amount of time. Then you'll be able to access the application copying loadbalance address on terraform output and paste to your browser
+When command `terraform apply` finishes, both machines in background will run the Ansible playbook to configure application and database... It will take a considerable amount of time. Then you'll be able to access the application copying loadbalance address on terraform output and paste to your browser
 
 ## Removing Infrastructure
-Navigate to the `terraform-ansible-aws-lab/infra/dev` folder and execute the command `terraform destroy` to deprovision the infrastructure on AWS and avoid unnecessary costs
+Navigate to the `terraform-ansible-aws-lab/infra/dev` folder and run the command `terraform destroy` to deprovision the infrastructure on AWS and avoid unnecessary costs
