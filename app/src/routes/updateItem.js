@@ -1,3 +1,4 @@
+const logger = require('../../logger/logger');
 module.exports = async (pool, req, res) => {
     try {
         await pool.promise().query('UPDATE items SET ? WHERE id = ?', [
@@ -5,9 +6,10 @@ module.exports = async (pool, req, res) => {
             req.params.id,
         ]);
         const [items] = await pool.promise().query('SELECT * FROM items WHERE id = ?', [req.params.id]);
+        logger.debug(`Item marked as [${req.body.completed}]`)
         res.send(items[0]);
     } catch (error) {
-        console.error(`Error updating item: ${error.message}`);
+        logger.error(`Error updating item: ${error.message}`);
         res.status(500).send('Error updating item');
     }
 };

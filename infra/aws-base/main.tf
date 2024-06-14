@@ -43,6 +43,7 @@ resource "aws_autoscaling_group" "application_asg" {
   desired_capacity    = 1
   max_size            = 3
   min_size            = 1
+  force_delete = true
   vpc_zone_identifier = [aws_subnet.lab_subnet_a.id, aws_subnet.lab_subnet_b.id]
   launch_template {
     id      = aws_launch_template.todo_app_template.id
@@ -91,6 +92,7 @@ resource "aws_autoscaling_group" "mysql_asg" {
   desired_capacity    = 1
   max_size            = 3
   min_size            = 1
+  force_delete = true
   vpc_zone_identifier = [aws_subnet.lab_subnet_a.id, aws_subnet.lab_subnet_b.id]
   launch_template {
     id      = aws_launch_template.mysql_template.id
@@ -167,9 +169,19 @@ resource "aws_secretsmanager_secret_version" "mysql_credentials_version" {
   })
 }
 
+resource "aws_autoscaling_policy" "scale_in" {
+  name = "scale-in"
+  autoscaling_group_name = aws_autoscaling_group.application_asg.name
+  policy_type = "TargetTrackingScaling"
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+    target_value = 50.0
+  }
+}
 
-
-output "load_balancers_addresses" {
+output "load_balancers_address" {
   value = {
     application = aws_lb.elb_todo_app.dns_name,
   }

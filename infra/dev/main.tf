@@ -11,6 +11,6 @@ module "aws-dev-app" {
   mysql_user                = var.mysql_user
 }
 
-output "lb_addresses" {
-  value = module.aws-dev-app.load_balancers_addresses
+output "lb_address" {
+  value = module.aws-dev-app.load_balancers_address
 }

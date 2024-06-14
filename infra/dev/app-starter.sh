@@ -29,7 +29,7 @@ tee -a playbook.yml > /dev/null <<EOT
       dest: /home/ubuntu/todo-app
       version: main
       force: true
-
+      
   - name: Install nodejs and npm
     apt:
       pkg:
@@ -44,8 +44,8 @@ tee -a playbook.yml > /dev/null <<EOT
 
   - name: Start project
     ansible.builtin.shell: 
-      cmd: cd /home/ubuntu/todo-app && MYSQL_HOST=${mysql_addr} MYSQL_PASSWORD=$(echo $mysql_creds | jq -r '.password') MYSQL_DATABASE="todo_items" MYSQL_USER=$(echo $mysql_creds | jq -r '.username') npm run prod
+      cmd: cd /home/ubuntu/todo-app &&  npm run prod
 
 
 EOT
-ansible-playbook playbook.yml -vvv > /home/ubuntu/app-starter.log
+MYSQL_HOST=${mysql_addr} MYSQL_PASSWORD=$(echo $mysql_creds | jq -r '.password') MYSQL_DATABASE="todo_items" MYSQL_USER=$(echo $mysql_creds | jq -r '.username') ansible-playbook playbook.yml -vvv > /home/ubuntu/app-starter.log

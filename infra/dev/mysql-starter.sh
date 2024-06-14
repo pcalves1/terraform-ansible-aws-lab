@@ -69,6 +69,20 @@ tee -a playbook.yml > /dev/null <<EOT
       become: true
       notify:
         - restart mysql
+
+    - name: Ensure MySQL database is present
+      community.mysql.mysql_db:
+        name: "{{ lookup('env', 'MYSQL_DATABASE') }}"
+        state: present
+        login_user: "{{ lookup('env', 'MYSQL_USER') }}"
+        login_password: "{{ lookup('env', 'MYSQL_PASSWORD') }}"
+
+    - name: Create items table in todo_items database
+      community.mysql.mysql_query:
+        login_user: "{{ lookup('env', 'MYSQL_USER') }}"
+        login_password: "{{ lookup('env', 'MYSQL_PASSWORD') }}"
+        login_db: "{{ lookup('env', 'MYSQL_DATABASE') }}"
+        query: CREATE TABLE IF NOT EXISTS items (id varchar(36), name varchar(255), completed boolean) DEFAULT CHARSET utf8mb4
 EOT
 TODO_APP_IP=${todo_app_ip} MYSQL_PASSWORD=$(echo $mysql_creds | jq -r '.password') MYSQL_DATABASE=todo_items MYSQL_USER=$(echo $mysql_creds | jq -r '.username') ansible-playbook playbook.yml -vvv >> /home/ubuntu/mysql-starter.log
 # sudo rm -fr /home/ubuntu/playbook.yml
