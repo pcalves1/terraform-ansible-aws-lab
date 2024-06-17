@@ -21,7 +21,7 @@ resource "aws_security_group" "todo_app_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["179.191.215.224/32"]
+    cidr_blocks = ["YOUR_IP"]
   }
 
   egress {
@@ -60,7 +60,7 @@ resource "aws_security_group" "mysql_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["179.191.215.224/32"]
+    cidr_blocks = ["YOUR_IP"]
   }
 
   egress {
