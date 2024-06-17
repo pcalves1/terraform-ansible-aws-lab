@@ -22,8 +22,6 @@ We'll use Ubuntu Linux for this lab. Some commands/details may vary depending on
 ## Create SSH key to access EC2 instances
 First, we need to prepare the necessary configurations to run the environment. In addition to having the above tools previously installed, we should create an SSH key that will be used to access the EC2 instances and manage them via Ansible. The example below, we'll create one called `aws-iac-lab` which is being saved in the `~/.ssh` folder
 
- 
-
     ssh-keygen -f ~/.ssh/aws-iac-lab -t rsa
 
 Enter a password for the key or leave it blank
@@ -39,6 +37,23 @@ In the AWS console, go to `IAM`, create a new user, give it administrative permi
 
     git clone git@github.com:pcalves1/terraform-ansible-aws-lab.git
 
+#### Database user and password
+Inside path `terraform-ansible-aws-lab/infra/dev`, create a new file named `secrets.tf` in order to handle the authentication for the database. This file will be only accessible locally and it must not be exposed on Github. Follow the example below, change the default value for your mysql user and password
+
+```
+variable "mysql_user" {
+  default = "my_user"
+  type = string
+  sensitive = true
+}
+
+variable "mysql_password" {
+  default = "my_password"
+  type = string
+  sensitive = true
+}
+```
+
 #### Initialize Terraform
 In the terminal, navigate to the `terraform-ansible-aws-lab/infra/aws-base` folder and execute the command `terraform init`
 
@@ -47,38 +62,8 @@ Repeat the same step in the `terraform-ansible-aws-lab/infra/dev` folder which c
 Go to the path `terraform-ansible-aws-lab/infra/dev`, execute the command `terraform plan` to make sure of what will be implemented. And then the command `terraform apply`
 
 
-## Application Deployment
-
-#### Ansible hosts file
-Add the IP of each EC2 instance to the `terraform-ansible-aws-lab/infra/dev/hosts` file
-````
-Before: <<APP_IP>> ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/aws-iac-lab
-
-After: 123.123.123.123 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/aws-iac-lab
-````
-
-#### Vars
-We will do the same thing for the variables file `terraform-ansible-aws-lab/infra/dev/ansible/vars/vars.yaml`. We'll add the IP of each instance in its proper place
-
-````
-Before: todo_app_ip: "<<APP_IP>>"
-After: todo_app_ip: "123.123.123.123"
-````
-
-#### Database user and password
-Still in the `terraform-ansible-aws-lab/infra/dev/ansible/vars/vars.yaml` file, insert a username and password for the MySQL database. Replace the lines of the username and password as shown in the following example:
-
-mysql_user: "~~<<MYSQL_USER>>~~" <br>
-mysql_user: "meu_user"
-
-
-Now go to the path `terraform-ansible-aws-lab/infra/dev/ansible` to start the playbook according to the host file.
-
-    ansible-playbook playbook.yaml -i hosts
-
-
 ## Accessing the application
-After the ansible playbook runs and everything is okay. In the terminal, go to the path `terraform-ansible-aws-lab/infra/dev` and run the command `terraform output`, copy the load balancer address and paste it into your browser to access the app
+When command `terraform apply` finishes, both machines in background will run the Ansible playbook to configure application and database... It will take a considerable amount of time. Then you'll be able to access the application copying loadbalance address on terraform output and paste to your browser
 
 ## Removing Infrastructure
-Navigate to the `terraform-ansible-aws-lab/infra/dev` folder and execute the command `terraform destroy` to deprovision the infrastructure on AWS and avoid unnecessary costs
+Navigate to the `terraform-ansible-aws-lab/infra/dev` folder and run the command `terraform destroy` to deprovision the infrastructure on AWS and avoid unnecessary costs

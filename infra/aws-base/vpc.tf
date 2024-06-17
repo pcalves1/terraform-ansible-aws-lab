@@ -26,14 +26,14 @@ resource "aws_route_table" "terraform_ansible_lab_rt" {
 resource "aws_subnet" "lab_subnet_a" {
   vpc_id            = aws_vpc.terraform_ansible_lab.id
   cidr_block        = var.subnet_cidr_block_a
-  availability_zone = var.availability_zone_a
+  availability_zone = "${var.aws_region}a"
   tags              = var.subnet_tags
 }
 
 resource "aws_subnet" "lab_subnet_b" {
   vpc_id            = aws_vpc.terraform_ansible_lab.id
   cidr_block        = var.subnet_cidr_block_b
-  availability_zone = var.availability_zone_b
+  availability_zone = "${var.aws_region}b"
   tags              = var.subnet_tags
 }
 
@@ -50,16 +50,28 @@ resource "aws_route_table_association" "b" {
 
 
 resource "aws_lb" "elb_todo_app" {
+  name            = "todo-app-elb"
   internal        = false
   subnets         = [aws_subnet.lab_subnet_a.id, aws_subnet.lab_subnet_b.id]
-  security_groups = [aws_security_group.elb_general_access.id]
+  security_groups = [aws_security_group.elb_application_sg.id]
   tags = {
     "Name" = "todo-app-loadbalancer"
   }
 }
 
+resource "aws_lb" "mysql_nlb" {
+  name               = "mysql-nlb"
+  load_balancer_type = "network"
+  internal           = true
+  subnets            = [aws_subnet.lab_subnet_a.id, aws_subnet.lab_subnet_b.id]
+  security_groups    = [aws_security_group.elb_mysql_sg.id]
+  tags = {
+    "Name" = "mysql-loadbalancer"
+  }
+}
+
 resource "aws_lb_target_group" "target_todo_app" {
-  name     = "todo-app"
+  name     = "todo-app-tg"
   port     = "3000"
   protocol = "HTTP"
   vpc_id   = aws_vpc.terraform_ansible_lab.id
@@ -67,6 +79,18 @@ resource "aws_lb_target_group" "target_todo_app" {
     "Name" = "todo-app-target-group"
   }
 }
+
+resource "aws_lb_target_group" "target_mysql" {
+  name        = "mysql-tg"
+  port        = 3306
+  protocol    = "TCP"
+  vpc_id      = aws_vpc.terraform_ansible_lab.id
+  target_type = "instance"
+  tags = {
+    "Name" = "mysql-target-group"
+  }
+}
+
 
 resource "aws_lb_listener" "listener_todo_app" {
   load_balancer_arn = aws_lb.elb_todo_app.arn
@@ -81,11 +105,22 @@ resource "aws_lb_listener" "listener_todo_app" {
   }
 }
 
-resource "aws_lb_target_group_attachment" "target_group_attachment" {
-  target_group_arn = aws_lb_target_group.target_todo_app.arn
-  target_id        = aws_instance.todo_app_instance[0].id # CRIAR FORMA DE ESPECIFICAR MELHOR A INSTÂNCIA DEV-APP (IF TAG NAME EQUAL DEV-APP??)
+resource "aws_lb_listener" "mysql_listener" {
+  load_balancer_arn = aws_lb.mysql_nlb.arn
+  port              = 3306
+  protocol          = "TCP"
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.target_mysql.arn
+  }
+  tags = {
+    "Name" = "mysql-listener"
+  }
 }
 
-output "loadb_balancer_address" {
-  value = aws_lb.elb_todo_app.dns_name
+output "loadb_balancers_addresses" {
+  value = {
+    application = aws_lb.elb_todo_app.dns_name,
+    mysql       = aws_lb.mysql_nlb.dns_name
+  }
 }
