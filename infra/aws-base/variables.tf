@@ -35,20 +35,12 @@ variable "subnet_tags" {
   }
 }
 
-variable "availability_zone_a" {
-  type = string
-}
-
-variable "availability_zone_b" {
-  type = string
-}
-
 variable "subnet_cidr_block_a" {
   default = "10.0.1.0/24"
 }
 
 variable "subnet_cidr_block_b" {
-  default = "10.0.2.0/24"
+  default = "10.0.128.0/24"
 }
 
 variable "mysql_user" {

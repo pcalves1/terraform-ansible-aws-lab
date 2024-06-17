@@ -26,14 +26,14 @@ resource "aws_route_table" "terraform_ansible_lab_rt" {
 resource "aws_subnet" "lab_subnet_a" {
   vpc_id            = aws_vpc.terraform_ansible_lab.id
   cidr_block        = var.subnet_cidr_block_a
-  availability_zone = var.availability_zone_a
+  availability_zone = "${var.aws_region}a"
   tags              = var.subnet_tags
 }
 
 resource "aws_subnet" "lab_subnet_b" {
   vpc_id            = aws_vpc.terraform_ansible_lab.id
   cidr_block        = var.subnet_cidr_block_b
-  availability_zone = var.availability_zone_b
+  availability_zone = "${var.aws_region}b"
   tags              = var.subnet_tags
 }
 
