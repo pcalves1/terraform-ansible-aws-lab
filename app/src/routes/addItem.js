@@ -7,12 +7,6 @@ module.exports = async (pool, req, res) => {
         completed: false,
     };
 
-    try {
-        await pool.promise().query('INSERT INTO items SET ?', item);
-        logger.debug(`Item [${item.id}] created`)
-        res.send(item);
-    } catch (error) {
-        logger.error(`Error storing item: ${error.message}`);
-        res.status(500).send('Error storing item');
-    }
+    await db.storeItem(item);
+    res.send(item);
 };

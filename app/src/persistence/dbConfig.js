@@ -1,68 +1,29 @@
-const logger = require('../../logger/logger')
-const dbOpts = require('./dbOpts')
-const mysql = require("mysql2/promise")
+const fs = require('fs');
 
-let pool;
-let isConnected = false;
+const {
+  MYSQL_HOST: HOST,
+  MYSQL_HOST_FILE: HOST_FILE,
+  MYSQL_USER: USER,
+  MYSQL_PASSWORD: USER_PASSWORD,
+  MYSQL_USER_FILE: USER_FILE,
+  MYSQL_ROOT_PASSWORD: ROOT_PASSWORD,
+  MYSQL_ROOT_PASSWORD_FILE: PASSWORD_FILE,
+  MYSQL_DATABASE: DB,
+  MYSQL_DATABASE_FILE: DB_FILE,
+} = process.env;
 
-async function connect() {
-    if (!isConnected) {
-        logger.debug("Database connection is not established. Trying to connect...")
-    }
-    try {
-        let conn = mysql.createPool(dbOpts);
-        pool = await conn.getConnection()
-        isConnected = true;
-        logger.info('Database connection established');
-        return pool;
-    } catch (error) {
-        logger.error("Database conecction error: " + error)
-        isConnected = false;
-        setTimeout(await connect(), 5000);
-    }
-}
+const host = HOST_FILE ? fs.readFileSync(HOST_FILE, 'utf8').trim() : HOST;
+const user = USER_FILE ? fs.readFileSync(USER_FILE, 'utf8').trim() : USER;
+const passwordRoot = PASSWORD_FILE ? fs.readFileSync(PASSWORD_FILE, 'utf8').trim() : ROOT_PASSWORD;
+const passwordUser = USER_PASSWORD ? USER_PASSWORD.trim() : passwordRoot;
+const database = DB_FILE ? fs.readFileSync(DB_FILE, 'utf8').trim() : DB;
 
-async function dbSetup() {
+let dbOpts = {
+  host,
+  user,
+  password: passwordUser,
+  database,
+  port: 3306,
+};
 
-    await createDatabaseIfNotExists()
-    await createTableIfNotExists()
-}
-
-async function createDatabaseIfNotExists() {
-
-    try {
-        logger.debug('Checking if the database is connected');
-        if (!isConnected) {
-            await connect()
-            logger.debug('Database connection established')
-        }
-        await pool.query(`CREATE DATABASE IF NOT EXISTS todo_items`)
-        logger.info(`Database todo_items created or already exists.`)
-    } catch (error) {
-        logger.error('Error creating database:', error)
-        return false
-    }
-}
-
-async function createTableIfNotExists() {
-    let pool;
-    try {
-        if (!isConnected) {
-            pool = await connect()
-        }
-        await pool.query('USE todo_items')
-        await pool.query(
-            `CREATE TABLE IF NOT EXISTS items (id varchar(36), name varchar(255), completed boolean) DEFAULT CHARSET utf8mb4`
-        )
-        logger.info(`Table items created or already exists`)
-    } catch (error) {
-        logger.error(`Could not create table. ${error}`)
-        return false
-    }
-}
-
-module.exports = {
-    dbSetup,
-    createTableIfNotExists,
-    connect
-}
+module.exports = dbOpts;
