@@ -72,6 +72,7 @@ async function getItems() {
         return response
     } catch (error) {
         logger.error(`Could not fetch the request. ${error}`)
+        setTimeout(connect, 5000);
     }
 }
 
@@ -90,6 +91,7 @@ async function getItem(id) {
         return response
     } catch (error) {
         logger.error(`Could not fetch the request. ${error}`)
+        setTimeout(connect, 5000);
     }
 }
 
@@ -106,6 +108,7 @@ async function storeItem(item) {
         logger.debug(`Item [${item.id}] created`)
     } catch (error) {
         logger.error(`Could not fetch the request. ${error}`)
+        setTimeout(connect, 5000);
     }
 }
 
@@ -118,10 +121,11 @@ async function updateItem(id, item) {
             'UPDATE items SET name=?, completed=? WHERE id=?',
             [item.name, item.completed ? 1 : 0, id]
         )
-        logger.debug(`Item marked as [${item.completed}]`)
+        logger.debug(`Item strikethrough marked as [${item.completed}]`)
         pool.release()
     } catch (error) {
         logger.error(`Could not fetch the request. ${error}`)
+        setTimeout(connect, 5000);
     }
 }
 
@@ -135,6 +139,7 @@ async function removeItem(id) {
         pool.release()
     } catch (error) {
         logger.error(`Could not fetch the request. ${error}`)
+        setTimeout(connect, 5000);
     }
 }
 

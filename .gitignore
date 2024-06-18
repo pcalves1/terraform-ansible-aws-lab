@@ -2,3 +2,4 @@ Annotation.md
 terraform*
 .terraform*
 node_modules
+secrets.tf
